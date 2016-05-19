@@ -1,5 +1,5 @@
 (function() {
-	var dataConnection = angular.module("datainterface", ["ngcapp"]);
+	var dataConnection = angular.module("dataInterface", []);
 
 	dataConnection.config(['$httpProvider', function($httpProvider) {
 		$httpProvider.defaults.useXDomain = true;
@@ -51,7 +51,7 @@
 		}
 
 		$scope.getData = function(tableName, ID, format = 'json') {
-			
+
 		}
 
 		$scope.updateData = function() {
@@ -85,6 +85,15 @@
 		$scope.systemURL = function() {
 			//return "http://dev07/dadev/";
 			return "http://localhost:15971/"
+		}
+	});
+
+
+	dataConnection.factory("getData", function() {
+		return {
+			BO: function() {
+				alert('a');
+			}
 		}
 	});
 })();
