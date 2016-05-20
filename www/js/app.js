@@ -26,6 +26,6 @@ angular.module('starter', ['ionic', 'ngcMain', 'ngcUser', 'apiInterface', 'ngcTe
 			deviceID  = $cordovaDevice.getUUID();
 		}
 		localStorage.setItem("__DEVICEID", deviceID);
-		// $location.path("/testapi");
+		$location.path("/testapi");
 	});
 })

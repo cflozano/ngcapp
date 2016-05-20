@@ -1,14 +1,38 @@
 (function() {
 	var apiInterface = angular.module("apiInterface", ["ngCordova"]);
 
-	apiInterface.factory("BO", ["$http", function($http) {
+	apiInterface.factory("BO", ["$http", "$q", function($http, $q) {
 
-		var getData = function(tableName, ID, format = 'json') {
-			getToken();
+		var getData = function(tableName, ID, securityID, format = 'json') {
+			return validateConnection().then(function(sessionInfo) {
+				var isValid, url, req, promise;
+
+				isValid = sessionInfo.data.IsAuthenticated;
+
+				if(isValid) {
+					url = "api/bo/" + tableName + "/" + ID + "/" + format + "/none/" + sessionInfo.data.sessionid + "/?securityID=" + securityID;
+					req = requestData(url);
+					promise = $http(req);
+				} else {
+					promise = errorHandler("Authentication Failed");
+				}
+
+				return promise;
+			})
 		}
 
 		return {
 			getData: getData
+		}
+
+		function validateConnection() {
+			var __sessionID;
+			var promise = getToken().then(function(response) {
+				var sessionInfo = response.data;
+				__sessionID = sessionInfo.sessionid;
+				return verifyToken(sessionInfo);
+			})
+			return promise;
 		}
 
 		/*Auxiliary functions*/
@@ -30,35 +54,21 @@
 			var req = requestData(url)
 			req.params["device"] = "001";
 			req.params["appid"] = "Browser";
-
-			$http(req)
-				.success(function(response) {
-					this.sessionInfo = response;
-					verifyToken();
-				})
-				.error(function(err) {
-					this.sessionInfo = undefined;
-					console.log("Something goes wrong");
-				});
+			return $http(req);
 		}
 
-		function verifyToken() {
+		function verifyToken(sessionInfo) {
 
-			var appid = getCredentials().appkey;
-			var hashedToken = btoa(appid + session.token);
-			var partialURL = "api/auth/verifytoken/" + session.sessionid + "/" + hashedToken;
+			var appid = getCredentials().applicationkey;
+			var hashedToken = btoa(appid + sessionInfo.token);
+			var partialURL = "api/auth/verifytoken/" + sessionInfo.sessionid + "/" + hashedToken;
+			var req = requestData(partialURL);
 
-			$http(req)
-				.success(function(response) {
-					$scope.sessionInfo2 = response;
-				})
-				.catch(function(err) {
-					console.log(unescape(err.data));
-				});
+			return $http(req);
 		}
 
 		function getCredentials() {
-			return JSON.parse(localStorage.getItem("connectionsettings") || '{}');;
+			return JSON.parse(localStorage.getItem("connectionsettings") || '{}');
 		}
 
 		function systemURL() {
@@ -66,6 +76,9 @@
 			return "http://localhost:15971/"
 		}
 
+		function errorHandler(message) {
+			return $q.reject(message);
+		}
 
 	}]);
 })();
