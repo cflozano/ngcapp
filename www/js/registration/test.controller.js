@@ -4,7 +4,7 @@
 	myAPITest.controller("TestCtrl", ["$scope", "BO", "BP", function($scope, BO, BP) {
 		$scope.MyTest = "Result goes here!!";
 		$scope.getIt = function() {
-			BO.getData("season", 75, 12642).then(function(response) {
+			BO.getData("season", 103, 1264).then(function(response) {
 					var DataObject = response.data;
 					$scope.MyTest = "Season: " + DataObject.data.Header.season;
 				})
@@ -15,7 +15,7 @@
 		};
 
 		$scope.deleteIt = function() {
-			BO.deleteData("season", 75, 1264).then(function(response) {
+			BO.deleteData("season", 103, 1264).then(function(response) {
 					var DataObject = response.data;
 				})
 				.catch(function(err) {

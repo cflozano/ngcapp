@@ -1,6 +1,13 @@
 (function() {
 	"use strict";
 	var apiInterface = angular.module("apiInterface", ["ngCordova"]);
+	// apiInterface.config(['$httpProvider', function($httpProvider) {
+	// 	$httpProvider.defaults.headers.common = {};
+	// 	$httpProvider.defaults.headers.post = {};
+	// 	$httpProvider.defaults.headers.put = {};
+	// 	$httpProvider.defaults.headers.delete = {};
+	// }]);
+
 	// Business Objects
 	apiInterface.factory("BO", ["$http", "$q", "ngcConnect", function($http, $q, ngcConnect) {
 
@@ -48,7 +55,6 @@
 					url = "api/bo/" + tableName + "/" + recordID + "/" + format + "/" + options + "/" + sessionInfo.data.sessionid;
 					req = ngcConnect.requestData(url, "DELETE", { "securityID": securityID });
 					promise = $http(req);
-					//promise = $http.delete(req.url, {"Content-Type": "application/x-www-form-urlencoded"});
 				} else {
 					promise = ngcConnect.errorHandler("Authentication Failed");
 				}
@@ -136,7 +142,6 @@
 			var hashedToken = btoa(appid + sessionInfo.token);
 			var partialURL = "api/auth/verifytoken/" + sessionInfo.sessionid + "/" + hashedToken;
 			var req = requestData(partialURL, "GET");
-
 			return $http(req);
 		}
 
@@ -167,9 +172,9 @@
 		};
 	}]);
 
-	apiInterface.factory('registration',  function() {
+	apiInterface.factory('registration', function() {
 		return {
-			settings: function(){
+			settings: function() {
 				var config = JSON.parse(localStorage.getItem("connectionsettings") || '{}');
 				config.appid = localStorage.getItem("__APPID");
 				config.device = localStorage.getItem("__DEVICE");
