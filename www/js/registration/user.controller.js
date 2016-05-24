@@ -1,7 +1,7 @@
 (function() {
 	var ngcUser = angular.module("ngcUser", []);
 
-	ngcUser.controller("UserCtrl", ["$scope", "$cordovaDevice", function($scope, $cordovaDevice) {
+	ngcUser.controller("UserCtrl", ["$scope", function($scope) {
 		$scope.register = function() {
 			var userKey = this.key;
 
@@ -13,11 +13,11 @@
 						user: decodedKey[1],
 						applicationkey: decodedKey[2],
 						company: decodedKey[3]
-					}
+					};
 					window.localStorage.setItem("connectionsettings", JSON.stringify(userConnection));
 				}
 			}
-		}
+		};
 
-	}])
+	}]);
 })();

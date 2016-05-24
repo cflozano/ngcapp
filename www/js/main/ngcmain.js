@@ -1,9 +1,7 @@
 (function() {
 	var ngcmain = angular.module("ngcMain", ["ui.router"]);
 
-	//ngcmain.config(["$stateProvider", "$locationProvider", function($stateProvider, $locationProvider) {
 	ngcmain.config(["$stateProvider", "$urlRouterProvider", function($stateProvider, $urlRouterProvider) {
-		//$locationProvider.html5Mode({ enabled: true, requireBase: false });
 		$stateProvider
 		.state('index',{
 			url:'/index',
@@ -28,8 +26,8 @@
 					templateUrl: 'templates/ngcfooter.html'
 				}
 			}
-		})
+		});
 
 		$urlRouterProvider.otherwise('/index');
-	}])
+	}]);
 })();

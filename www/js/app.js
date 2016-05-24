@@ -17,15 +17,8 @@ angular.module('starter', ['ionic', 'ngcMain', 'ngcUser', 'apiInterface', 'ngcTe
 			// a much nicer keyboard experience.
 			cordova.plugins.Keyboard.disableScroll(true);
 		}
-		if(window.StatusBar) {
+		if(window.StatusBar){
 			StatusBar.styleDefault();
 		}
-
-		var deviceID = "BROWSER";
-		if(window.cordova) {
-			deviceID  = $cordovaDevice.getUUID();
-		}
-		localStorage.setItem("__DEVICEID", deviceID);
-		$location.path("/testapi");
 	});
-})
+});
