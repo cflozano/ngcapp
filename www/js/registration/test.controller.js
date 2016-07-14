@@ -41,7 +41,7 @@
         };
 
         $scope.getRecords = function() {
-            Records.getData("audit","qa.audit", "qa.audit", "300|3")
+            Records.getData("audit","qa.audit", "qa.audit", "500|3")
                 .then(function(response) {
                     $scope.MyTest = "Quantity of audits: " + response.data.length;
 

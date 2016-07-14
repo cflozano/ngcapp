@@ -9,10 +9,10 @@
 			var tableObject, table;
 			var currentTable = auxiliary.getTableName(tableName);
 
-			if (currentTable) {
+			if(currentTable) {
 				table = localStorage.getItem(currentTable);
 
-				if (table) {
+				if(table) {
 					tableObject = angular.fromJson(table);
 				}
 			}
@@ -22,7 +22,7 @@
 
 		var setTable = function(tableName, data) {
 			var currentTable = auxiliary.getTableName(tableName);
-			if (currentTable) {
+			if(currentTable) {
 				localStorage.setItem(currentTable, angular.toJson(data));
 			}
 		};
@@ -31,7 +31,7 @@
 			getTableName: function(table) {
 				var prefix = "ngc.";
 				var tableName;
-				if (table) {
+				if(table) {
 					tableName = prefix + table;
 				}
 				return tableName;
@@ -43,4 +43,73 @@
 			setTable: setTable
 		};
 	}]);
+
+	storageModule.factory("DOD", ["ngcsql", function(ngcsql) {
+		var objectName = "";
+		var dataStored = localStorage.getItem(objectName) || "{}";
+		var data = angular.toJson(dataStored);
+
+		var toDelete = function(table, id, childTable, childID) {
+			var index;
+			var childObject;
+			var isHeaderRecord = childTable === undefined;
+
+			if(data[table] === undefined) {
+				data[table] = [];
+			}
+
+			index = objectIndexOf(data[table], "id", id);
+			if(index > -1) {
+
+				if(childTable) {
+					childObject = data[table][index].children[childTable];
+
+					if(childObject === undefined) {
+						childObject = [];
+					}
+					childObject.push(childID);
+				} else {
+					data[table][index].isDeletingHeader = true;
+				}
+			} else {
+				index = data[table].push(new TableBase(id)) - 1;
+				if(isHeaderRecord) {
+					data[table][index].isDeletingHeader = true;
+				} else {
+					childObject = data[table][index].children[childTable];
+
+					if(childObject === undefined) {
+						data[table][index].children[childTable] = [];
+					}
+					data[table][index].children[childTable].push(childID);
+				}
+			}
+		};
+
+		function TableBase(id) {
+			var table = {};
+
+			table.id = id;
+			table.children = {};
+
+			return table;
+		}
+
+		function objectIndexOf(arr, property, value) {
+			var index = -1;
+
+			for(var i = 0; i < arr.length; i++) {
+				if(arr[i][property] === value) {
+					index = i;
+					break;
+				}
+			}
+			return index;
+		}
+
+		return {
+			holdDeletion: toDelete
+		};
+	}]);
+
 })();

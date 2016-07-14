@@ -25,6 +25,7 @@
 				return promise;
 			});
 		};
+		
 		var updateData = function(tableName, recordID, data, securityID, format) {
 			format = format || "json";
 			return ngcConnect.validateConnection().then(function(sessionInfo) {
